@@ -1,5 +1,5 @@
-# [DashUI Next.js Free Admin Template](https://dashui-free-nextjs-admin-template.vercel.app/)
- next-js-admin-panel-template / dashboard  template created by [abdur-razzak2672](https://github.com/abdur-razzak2672) and available on Github
+# [DashUI Next.js Free Admin Template](https://next-js-admin-panel-template-8762kiavu.vercel.app/)
+ next-js-admin-panel-template / dashboard  template created by [abdur-razzak2672](https://github.com/abdur-razzak2672) coppy from DashUI Next.js Free Admin Template and available on Github
 
 ![dashui-free-nextjs-admin-template](https://user-images.githubusercontent.com/68774600/231716707-3da30d19-b826-4692-b03a-fed41376d250.jpg)
 
@@ -49,7 +49,7 @@ npm run build
 | Pricing |
 | 404 Error |
 | Authentication |
-| [Demo](https://dashui-free-nextjs-admin-template.vercel.app/) |
+| [Demo](https://next-js-admin-panel-template-8762kiavu.vercel.app/) |
 
 ## Technical Support or Questions
 If you have questions or need help integrating the product please [contact us](razzak172758@gmail.com).
