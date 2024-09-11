@@ -21,11 +21,11 @@ import CurrentPlan from 'sub-components/billing/CurrentPlan';
 import BillingAddress from 'sub-components/billing/BillingAddress';
 
 // sub components for /pages/settings
-import DeleteAccount from 'sub-components/settings/DeleteAccount';
-import EmailSetting from 'sub-components/settings/EmailSetting';
-import GeneralSetting from 'sub-components/settings/GeneralSetting';
-import Notifications from 'sub-components/settings/Notifications';
-import Preferences from 'sub-components/settings/Preferences';
+import DeleteAccount from 'sub-components/program-category/DeleteAccount';
+import EmailSetting from 'sub-components/program-category/EmailSetting';
+import GeneralSetting from 'sub-components/program-category/AddCategory';
+import Notifications from 'sub-components/program-category/Notifications';
+import Preferences from 'sub-components/program-category/Preferences';
 
 
 export {

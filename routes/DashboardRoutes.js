@@ -32,19 +32,19 @@ export const DashboardMenu = [
 	},
 	{
 		id: uuid(),
-		title: 'LAYOUTS & PAGES',
+		title: 'Programs & Courses',
 		grouptitle: true
 	},
 	{
 		id: uuid(),
-		title: 'Pages',
+		title: 'Programs Category',
 		icon: 'layers',
 		children: [
-			{ id: uuid(), link: '/pages/profile', name: 'Profile' },
-			{ id: uuid(), link: '/pages/settings', name: 'Settings'},
-			{ id: uuid(), link: '/pages/billing', name: 'Billing' },
-			{ id: uuid(), link: '/pages/pricing', name: 'Pricing'},
-			{ id: uuid(), link: '/404', name: '404 Error' }
+			{ id: uuid(), link: '/program-category/category-list', name: 'Category List' },
+			{ id: uuid(), link: '/program-category/add-category', name: 'Add Category'},
+			// { id: uuid(), link: '/pages/billing', name: 'Billing' },
+			// { id: uuid(), link: '/pages/pricing', name: 'Pricing'},
+			// { id: uuid(), link: '/404', name: '404 Error' }
 		]
 	},	
 	{

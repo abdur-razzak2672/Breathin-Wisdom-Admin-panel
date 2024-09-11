@@ -14,7 +14,7 @@ import {
 import { PlayCircle, Award, Calendar, Video, Clock } from "react-feather";
 
 // import sub custom components
-import DotBadge from "components/bootstrap/DotBadge";
+import DotBadge from "DemoComponents/bootstrap/DotBadge";
 
 // import widget/custom components
 import { HighlightCode } from "widgets";

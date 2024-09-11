@@ -79,4 +79,4 @@ export const OffcanvasCode = [
 	TriggerBehaviorCode
 ];
 
-export default OffcanvasCode;
+export default OffcanvasCode ;

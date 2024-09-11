@@ -11,6 +11,7 @@
   "dependencies": {
     "@vercel/analytics": "^1.0.0",
     "apexcharts": "^3.37.3",
+    "axios": "^1.7.7",
     "bootstrap": "^5.2.3",
     "eslint": "8.37.0",
     "eslint-config-next": "13.2.4",
@@ -26,6 +27,7 @@
     "react-dropzone": "^14.2.3",
     "react-feather": "^2.0.10",
     "react-responsive": "^9.0.2",
+    "react-toastify": "^10.0.5",
     "sass": "^1.77.8",
     "sass-loader": "^13.2.2",
     "simplebar": "^6.2.4",
