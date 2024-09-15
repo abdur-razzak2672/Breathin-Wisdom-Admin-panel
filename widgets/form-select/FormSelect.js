@@ -21,7 +21,7 @@ export const FormSelect = (props) => {
 				) : (
 					''
 				)}
-				{options.map((item, index) => {
+				{options?.map((item, index) => {
 					return (
 						<option key={index} value={item.value} className="text-dark"
 							//selected={defaultselected==item.value}

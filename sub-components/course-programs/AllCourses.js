@@ -7,18 +7,17 @@ import Loader from '../Spinner';
 import { toast } from "react-toastify";
 import Link from "next/link";
 
-const CategoryList = () => {
-  const [categories, setCategories] = useState([]);
+const AllCourses = () => {
+  const [allCourses, setAllCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [deletingCategoryId, setDeletingCategoryId] = useState(null);
-  
-  const getCategoriesList = async () => {
+  const [coursesId, setCoursesId] = useState(null);
+  const getAllCourses = async () => {
     try {
       setLoading(true);
-      const response = await ApiService.getApiService(ApiUrl.GET_CATEGORY_LIST);
-      setCategories(response);
+      const response = await ApiService.getApiService(ApiUrl.GET_ALL_COURSES);
+      setAllCourses(response);
     } catch (error) {
-      console.error("Error fetching categories:", error.message);
+      console.error("Error fetching Courses:", error.message);
     } finally {
       setLoading(false);
     }
@@ -26,31 +25,33 @@ const CategoryList = () => {
 
 
   const handleDelete = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this category?");
+    const isConfirmed = window.confirm("Are you sure you want to delete this Course?");
     if (isConfirmed) {
       try {
-        setDeletingCategoryId(id);
-        console.log("Deleting category with ID:", id);
-        const response = await ApiService.deleteApiService(`${ApiUrl.DELETE_CATEGORY}/${id}`);
+        setCoursesId(id);
+        console.log("Deleting course with ID:", id);
+        const response = await ApiService.deleteApiService(`${ApiUrl.DELETE_COURSE}/${id}`);
         if (response?.statusCode === 200) {
-          toast.success("Category deleted successfully");
-          getCategoriesList();
+          toast.success("Course deleted successfully");
+          getAllCourses();
         } else {
-          console.error("Failed to delete category:", response.message);
-          console.error("Failed to delete category");
+          console.error("Failed to delete course:", response.message);
+          console.error("Failed to delete course");
         }
       } catch (error) {
-        console.error("Error deleting category:", error.message);
-        console.error("An error occurred while deleting the category");
+        console.error("Error deleting course:", error.message);
+        console.error("An error occurred while deleting the course");
       } finally {
-        setDeletingCategoryId(null);
+        setCoursesId(null);
       }
     } else {
-      console.log("Category deletion canceled");
+      console.log("course deletion canceled");
     }
   };
+
+
   useEffect(() => {
-    getCategoriesList();
+    getAllCourses();
   }, []);
 
   return (
@@ -58,8 +59,8 @@ const CategoryList = () => {
       <Col md={12} xs={12}>
         <Card>
           <Card.Header className="bg-white d-flex align-items-center justify-content-between py-4 ">
-            <h4 className="mb-0">Category List</h4>
-            <h4 className="mb-0">Total Category : {categories?.totalData ? categories?.totalData : 0} </h4>
+            <h4 className="mb-0">All Courses</h4>
+            <h4 className="mb-0">Total Course : {allCourses?.totalData ? allCourses?.totalData : 0} </h4>
           </Card.Header>
           {loading ? (
             <span className="p-5"> <Loader loading={loading} /></span>
@@ -69,14 +70,20 @@ const CategoryList = () => {
                 <thead className="table-light">
                   <tr>
                     <th>#</th>
+                    <th>Course Name</th>
                     <th>Category Name</th>
+                    <th>Price</th>
+                    <th>Number Of Lectures</th>
+                    <th>Number Of Lessons</th>
+                    <th>total Duration</th>
+                    <th> Number students Enrolled</th>
                     <th>Description</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {categories?.results?.length > 0 ? (
-                    categories?.results?.map((category, index) => {
+                  {allCourses?.results?.length > 0 ? (
+                    allCourses?.results?.map((course, index) => {
                       return (
                         <tr key={index}>
                           <th className="align-middle" scope="row">{index + 1}</th>
@@ -84,32 +91,39 @@ const CategoryList = () => {
                             <div className="d-flex align-items-center">
                               <div>
                                 <div className={`icon-shape icon-md border p-4 rounded  bg-white`}>
-                                  <Image className="rounded" style={{ width: "50px", height: "50px", objectFit: "cover" }} src={category.image} alt="" />
+                                  <Image className="rounded" style={{ width: "50px", height: "50px", objectFit: "cover" }} src={course?.image} alt="" />
                                 </div>
                               </div>
                               <div className="ms-3 lh-1">
                                 <h5 className=" mb-1">
-                                  <Link href="#" className="text-inherit">{category.title}</Link></h5>
+                                  <Link href="#" className="text-inherit">{course?.title}</Link></h5>
                               </div>
                             </div>
                           </td>
-                          <td className="align-middle">{category.description}</td>
+                          <td className="align-middle">{course?.courseCategory?.name}</td>
+                          <td className="align-middle">{course?.price}</td>
+                          <td className="align-middle">{course?.courseContents?.length}</td>
+                          <td className="align-middle">{course?.courseContents?.length}</td>
+                          <td className="align-middle">{course?.totalDuration}</td>
+
+                          <td className="align-middle">{course?.courseContents?.length}</td>
+                          <td className="align-middle">{course?.description}</td>
                           <td className="align-middle">
 
                             <div className="d-flex">
-                              <Link className="me-2" href={`/program-category/update-category/${category?._id}`}>
+                              <Link className="me-2" href={`/course-program/update-course/${course?._id}`}>
                                 <PencilSquare
                                   className="text-success"
                                   style={{ cursor: 'pointer' }}
                                 />
                               </Link>
 
-                              {deletingCategoryId === category?._id ? (
+                              {coursesId === course?._id ? (
                                 <Loader loading={true} width="15px" top="0px" borderWidth="3px" />) : (
                                 <Trash
                                   className="text-danger mt-1"
                                   style={{ cursor: 'pointer' }}
-                                  onClick={() => handleDelete(category?._id)}
+                                  onClick={() => handleDelete(course?._id)}
                                 />)}
                             </div>
 
@@ -118,7 +132,7 @@ const CategoryList = () => {
                       )
                     })) : (
                     <tr>
-                      <td className="text-center" colSpan="5">No categories found.</td>
+                      <td className="text-center" colSpan="10">No course found.</td>
                     </tr>
                   )
                   }
@@ -133,4 +147,4 @@ const CategoryList = () => {
   );
 };
 
-export default CategoryList;
+export default AllCourses;

@@ -42,9 +42,24 @@ export const DashboardMenu = [
 		children: [
 			{ id: uuid(), link: '/program-category/category-list', name: 'Category List' },
 			{ id: uuid(), link: '/program-category/add-category', name: 'Add Category'},
-			// { id: uuid(), link: '/pages/billing', name: 'Billing' },
-			// { id: uuid(), link: '/pages/pricing', name: 'Pricing'},
-			// { id: uuid(), link: '/404', name: '404 Error' }
+		]
+	},
+	{
+		id: uuid(),
+		title: 'Course Programs',
+		icon: 'layers',
+		children: [
+			{ id: uuid(), link: '/course-program/all-courses', name: 'All Courses' },
+			{ id: uuid(), link: '/course-program/add-course', name: 'Add Course'},
+		]
+	},	
+	{
+		id: uuid(),
+		title: 'Course Content',
+		icon: 'layers',
+		children: [
+			{ id: uuid(), link: '/course-content/all-contents', name: 'All Contents' },
+			{ id: uuid(), link: '/course-content/add-content', name: 'Add Content'},
 		]
 	},	
 	{
