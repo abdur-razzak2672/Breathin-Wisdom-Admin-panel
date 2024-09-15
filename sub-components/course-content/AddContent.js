@@ -58,7 +58,7 @@ const AddContent = () => {
     formDataInstance.append('duration', formData.duration);
     formDataInstance.append('streamUrl', formData.streamUrl);
     if (formData.doccFile) {
-       formDataInstance.append('doccFile', "raazak");
+       formDataInstance.append('doccFile',formData.doccFile);
     }
     try {
       await ApiService.postApiService(ApiUrl.CREAT_CONTENT, formDataInstance);

@@ -6,8 +6,8 @@ const index = () => {
     return (
         <Container fluid className="p-6">
             <div className='d-flex justify-content-between border-bottom pb-4 mb-4'>
-                <PageHeading heading=" Update Course" />
-                <Link href="/course-content/all-content"><Button variant="primary">All Content</Button></Link>
+                <PageHeading heading=" Update Content" />
+                <Link href="/course-content/all-contents"><Button variant="primary">All Content</Button></Link>
             </div>
             <UpdateContent />
         </Container>
