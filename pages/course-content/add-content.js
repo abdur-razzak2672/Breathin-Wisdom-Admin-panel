@@ -7,7 +7,7 @@ const index = () => {
     <Container fluid className="p-6">
       <div className='d-flex justify-content-between border-bottom pb-4 mb-4'>
         <PageHeading heading=" Add Content" />
-        <Link href="/course-content/all-content"><Button variant="primary">All Content</Button></Link>
+        <Link href="/course-content/all-contents"><Button variant="primary">All Content</Button></Link>
       </div>
       <AddContent />
     </Container>

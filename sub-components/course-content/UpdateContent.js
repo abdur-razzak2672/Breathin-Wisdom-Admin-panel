@@ -11,6 +11,8 @@ const UpdateContent = () => {
   const contentId = router.query.id;
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState([]);
+  const [previewUrl, setPreviewUrl] = useState(null);
+
   const [formData, setFormData] = useState({
     courseId: "",
     title: "",
@@ -41,8 +43,9 @@ const UpdateContent = () => {
         description: content.description || "",
         duration: content.duration || "",
         streamUrl: content.streamUrl || "",
-        doccFile: null,
+        doccFile: content?.doccFile || null,
       });
+      setPreviewUrl(content?.doccFile || '')
     } catch (error) {
       console.error('Failed to fetch lesson details.');
     }
@@ -52,14 +55,17 @@ const UpdateContent = () => {
     if (contentId) {
       getCourses();
       getContent();
-    }
+     }
   }, [contentId]);
 
-  
+
   const handleInputChange = (e) => {
     const { id, value, files } = e.target;
     if (id === 'doccFile') {
       setFormData({ ...formData, doccFile: files[0] || null });
+      if (files[0]) {
+        setPreviewUrl(URL.createObjectURL(files[0]));
+      }
     } else {
       setFormData({ ...formData, [id]: value });
     }
@@ -82,7 +88,7 @@ const UpdateContent = () => {
     formDataInstance.append('duration', formData.duration);
     formDataInstance.append('streamUrl', formData.streamUrl);
     if (formData.doccFile) {
-      formDataInstance.append('doccFile', " formData.doccFile");
+      formDataInstance.append('doccFile', formData.doccFile);
     }
     try {
       await ApiService.putApiService(`${ApiUrl.UPDATE_CONTENT}/${contentId}`, formDataInstance);
@@ -94,6 +100,7 @@ const UpdateContent = () => {
       setLoading(false);
     }
   };
+ 
 
   return (
     <Row className="mb-8 d-flex justify-content-center">
@@ -152,6 +159,12 @@ const UpdateContent = () => {
                     onChange={handleInputChange}
                     required={!contentId}
                   />
+                  {previewUrl &&
+                    <a target='_blank' href={previewUrl} download={previewUrl}>
+                    {previewUrl}
+                  </a>
+                }
+
                 </div>
               </Row>
               <Row className="mb-3">
