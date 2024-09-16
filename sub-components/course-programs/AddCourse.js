@@ -15,10 +15,11 @@ const AddCourse = () => {
     trailorUrl: "",
     totalDuration: "",
     image: null,
-    categoryId: ""
+    categoryId: "",
+    discountPercent: 0,
+    discountPrice: 0,
   });
   const fileInputRef = useRef(null);
-
 
   const getCategoriesList = async () => {
     try {
@@ -32,21 +33,40 @@ const AddCourse = () => {
     }
   };
 
+  const calculateDiscountPrice = (price, discountPercent) => {
+    if (!price || !discountPercent) return 0;
+    return price - (price * discountPercent) / 100;
+  };
+
   const handleInputChange = (e) => {
     const { id, value, files } = e.target;
+
     if (id === 'image') {
       setFormData({ ...formData, image: files[0] || null });
     } else {
-      setFormData({ ...formData, [id]: value });
+      let updatedFormData = { ...formData, [id]: value };
+
+      // Automatically calculate discountPrice based on price and discountPercent
+      if (id === 'price' || id === 'discountPercent') {
+        const price = id === 'price' ? parseFloat(value) || 0 : parseFloat(formData.price) || 0;
+        const discountPercent = id === 'discountPercent' ? parseFloat(value) || 0 : parseFloat(formData.discountPercent) || 0;
+        const discountPrice = calculateDiscountPrice(price, discountPercent);
+        updatedFormData.discountPrice = discountPrice;
+      }
+
+      setFormData(updatedFormData);
     }
   };
+
   const handleCategoryChange = (e) => {
     const selectedValue = e.target.value;
     setFormData({ ...formData, categoryId: selectedValue });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     const formDataInstance = new FormData();
     formDataInstance.append('title', formData.title);
     formDataInstance.append('description', formData.description);
@@ -54,9 +74,13 @@ const AddCourse = () => {
     formDataInstance.append('trailorUrl', formData.trailorUrl);
     formDataInstance.append('totalDuration', formData.totalDuration);
     formDataInstance.append('categoryId', formData.categoryId);
+    formDataInstance.append('discountPercent', formData.discountPercent);
+    formDataInstance.append('discountPrice', formData.discountPrice);
+
     if (formData.image) {
       formDataInstance.append('image', formData.image);
     }
+
     try {
       await ApiService.postApiService(ApiUrl.CREATE_COURSE, formDataInstance);
       toast.success('Course created successfully!');
@@ -67,7 +91,9 @@ const AddCourse = () => {
         trailorUrl: "",
         totalDuration: "",
         image: null,
-        categoryId: ""
+        categoryId: "",
+        discountPercent: 0,
+        discountPrice: 0,
       });
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -78,7 +104,6 @@ const AddCourse = () => {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     getCategoriesList();
@@ -106,8 +131,9 @@ const AddCourse = () => {
                   </select>
                 </Col>
               </Row>
+
               <Row className="mb-3">
-                <label htmlFor="course" className="col-sm-12 col-form-label form-label">
+                <label htmlFor="title" className="col-sm-12 col-form-label form-label">
                   Course Name
                 </label>
                 <div className="col-md-12 col-12">
@@ -123,24 +149,56 @@ const AddCourse = () => {
                 </div>
               </Row>
 
+              <Row className="mb-3">
+                <Col md={8}>
+                  <label htmlFor="price" className="col-sm-12 col-form-label form-label">
+                    Course Price
+                  </label>
+                  <div className="col-md-12 col-12">
+                    <input
+                      type="number"
+                      className="form-control"
+                      placeholder="Enter Price"
+                      id="price"
+                      value={formData?.price}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                </Col>
+
+                <Col md={4}>
+                  <label htmlFor="discountPercent" className="col-sm-12 col-form-label form-label">
+                    Discount Percent
+                  </label>
+                  <div className="col-md-12 col-12">
+                    <input
+                      type="number"
+                      className="form-control"
+                      placeholder="Enter Percent Number"
+                      id="discountPercent"
+                      value={formData?.discountPercent}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                </Col>
+              </Row>
 
               <Row className="mb-3">
-                <label htmlFor="price" className="col-sm-12 col-form-label form-label">
-                  Course Price
+                <label htmlFor="discountPrice" className="col-sm-12 col-form-label form-label">
+                  Discount Price
                 </label>
                 <div className="col-md-12 col-12">
                   <input
                     type="number"
                     className="form-control"
-                    placeholder="Enter Price"
-                    id="price"
-                    value={formData?.price}
-                    onChange={handleInputChange}
-                    required
+                    id="discountPrice"
+                    value={formData?.discountPrice}
+                    disabled
                   />
                 </div>
               </Row>
-
 
               <Row className="mb-3">
                 <label htmlFor="image" className="col-sm-12 col-form-label form-label">
@@ -156,7 +214,6 @@ const AddCourse = () => {
                   />
                 </div>
               </Row>
-
               <Row className="mb-3">
                 <label htmlFor="trailorUrl" className="col-sm-12 col-form-label form-label">
                   Trailor URL
