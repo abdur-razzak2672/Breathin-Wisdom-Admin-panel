@@ -73,10 +73,8 @@ const AllCourses = () => {
                     <th>Course Name</th>
                     <th>Category Name</th>
                     <th>Price</th>
-                    <th>Number Of Lectures</th>
-                    <th>Number Of Lessons</th>
-                    <th>total Duration</th>
-                    <th> Number students Enrolled</th>
+                    {/* <th>Status</th> */}
+                    <th>Course Information</th>
                     <th>Description</th>
                     <th>Action</th>
                   </tr>
@@ -101,12 +99,24 @@ const AllCourses = () => {
                             </div>
                           </td>
                           <td className="align-middle">{course?.courseCategory?.name}</td>
-                          <td className="align-middle">{course?.price}</td>
-                          <td className="align-middle">{course?.courseContents?.length}</td>
-                          <td className="align-middle">{course?.courseContents?.length}</td>
-                          <td className="align-middle">{course?.totalDuration}</td>
 
-                          <td className="align-middle">{course?.courseContents?.length}</td>
+                          <td className="align-middle">
+                            Price : {course?.price}<br />
+                            Discount Percent : {course?.discountPercent ? course?.discountPercent + "%" : "NA"}<br />
+                            Discount Price : {course?.discountPrice ? course?.discountPrice : "NA"}
+                          </td>
+                          {/* <td className="align-middle">
+                            Payment Status : {course?.paymentStatus === "paid" ? <span className="text-success">Paid</span> : <span className="text-danger">Un-Paid</span>}<br />
+                            Subscribed Status : {course?.isSubscribed ? <span className="text-success">Subscribed</span> : <span className="text-danger">Un-Subscribed</span>}
+
+                          </td> */}
+                          <td className="align-middle">
+                           Number Of Lecture : {course?.courseContents?.length}<br/>
+                           Number Of Lession : {course?.courseContents?.length}<br/>
+                           Number Of Enrollement : {course?.courseContents?.length}<br/>
+                           Total Duration : {course?.totalDuration}
+
+                          </td>
                           <td className="align-middle">{course?.description}</td>
                           <td className="align-middle">
 

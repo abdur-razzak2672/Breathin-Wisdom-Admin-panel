@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Col, Row, Form, Card, Button } from 'react-bootstrap';
 import ApiService from '../../utils/ApiServices';
@@ -21,7 +21,10 @@ const UpdateCourse = () => {
         totalDuration: '',
         image: '',
         courseCategoryId: '',
+        discountPercent: '',
+        discountPrice: '',
     });
+
     const getCourseDetails = async () => {
         setLoading(true);
         try {
@@ -35,6 +38,8 @@ const UpdateCourse = () => {
                 totalDuration: course.totalDuration,
                 image: course.image || '',
                 courseCategoryId: course?.courseCategory?.id || '',
+                discountPercent: course.discountPercent || '',
+                discountPrice: course.discountPrice || '',
             });
             setImagePreview(course.image || '');
         } catch (error) {
@@ -43,7 +48,6 @@ const UpdateCourse = () => {
             setLoading(false);
         }
     };
-
 
     const getCategoriesList = async () => {
         try {
@@ -57,14 +61,12 @@ const UpdateCourse = () => {
         }
     };
 
-
     useEffect(() => {
         if (courseId) {
             getCourseDetails();
             getCategoriesList();
         }
     }, [courseId]);
-
 
     const handleInputChange = (e) => {
         const { id, value, files } = e.target;
@@ -74,17 +76,19 @@ const UpdateCourse = () => {
             if (file) {
                 setImagePreview(URL.createObjectURL(file));
             }
+        } else if (id === 'discountPercent') {
+            const discountPercent = value;
+            const discountPrice = (formData.price * (1 - discountPercent / 100)).toFixed(2);
+            setFormData({ ...formData, discountPercent, discountPrice });
         } else {
             setFormData({ ...formData, [id]: value });
         }
     };
 
-
     const handleCategoryChange = (e) => {
         const selectedValue = e.target.value;
         setFormData({ ...formData, courseCategoryId: selectedValue });
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -96,6 +100,8 @@ const UpdateCourse = () => {
         formDataInstance.append('trailorUrl', formData.trailorUrl);
         formDataInstance.append('totalDuration', formData.totalDuration);
         formDataInstance.append('courseCategoryId', formData.courseCategoryId);
+        formDataInstance.append('discountPercent', formData.discountPercent);
+        formDataInstance.append('discountPrice', formData.discountPrice);
 
         if (typeof formData.image === 'string') {
             formDataInstance.append('image', formData.image);
@@ -126,7 +132,6 @@ const UpdateCourse = () => {
                             <h5 className="mb-1">Update Course</h5>
                         </div>
                         <Form onSubmit={handleSubmit}>
-
                             <Row className="mb-3">
                                 <Form.Label className="col-md-4" htmlFor="category">Course Category</Form.Label>
                                 <Col md={12} xs={12}>
@@ -147,11 +152,8 @@ const UpdateCourse = () => {
                                 </Col>
                             </Row>
 
-
                             <Row className="mb-3">
-                                <label htmlFor="title" className="col-sm-12 col-form-label form-label">
-                                    Course Name
-                                </label>
+                                <label htmlFor="title" className="col-sm-12 col-form-label form-label">Course Name</label>
                                 <div className="col-md-12 col-12">
                                     <input
                                         type="text"
@@ -165,29 +167,53 @@ const UpdateCourse = () => {
                                 </div>
                             </Row>
 
+                            <Row className="mb-3">
+                                <Col md={8}>
+                                    <label htmlFor="price" className="col-sm-12 col-form-label form-label">Course Price</label>
+                                    <div className="col-md-12 col-12">
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            placeholder="Enter Price"
+                                            id="price"
+                                            value={formData.price}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </div>
+                                </Col>
+
+                                <Col md={4}>
+                                    <label htmlFor="discountPercent" className="col-sm-12 col-form-label form-label">Discount Percent</label>
+                                    <div className="col-md-12 col-12">
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            placeholder="Enter Percent Number"
+                                            id="discountPercent"
+                                            value={formData.discountPercent}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </div>
+                                </Col>
+                            </Row>
 
                             <Row className="mb-3">
-                                <label htmlFor="price" className="col-sm-12 col-form-label form-label">
-                                    Course Price
-                                </label>
+                                <label htmlFor="discountPrice" className="col-sm-12 col-form-label form-label">Discount Price</label>
                                 <div className="col-md-12 col-12">
                                     <input
                                         type="number"
                                         className="form-control"
-                                        placeholder="Enter Price"
-                                        id="price"
-                                        value={formData.price}
-                                        onChange={handleInputChange}
-                                        required
+                                        id="discountPrice"
+                                        value={formData.discountPrice}
+                                        disabled
                                     />
                                 </div>
                             </Row>
 
-
                             <Row className="mb-3">
-                                <label htmlFor="image" className="col-sm-12 col-form-label form-label">
-                                    Upload Image
-                                </label>
+                                <label htmlFor="image" className="col-sm-12 col-form-label form-label">Upload Image</label>
                                 <div className="col-md-12 col-12">
                                     <input
                                         type="file"
@@ -205,11 +231,8 @@ const UpdateCourse = () => {
                                 </div>
                             </Row>
 
-
                             <Row className="mb-3">
-                                <label htmlFor="trailorUrl" className="col-sm-12 col-form-label form-label">
-                                    Trailor URL
-                                </label>
+                                <label htmlFor="trailorUrl" className="col-sm-12 col-form-label form-label">Trailor URL</label>
                                 <div className="col-md-12 col-12">
                                     <input
                                         type="text"
@@ -223,16 +246,13 @@ const UpdateCourse = () => {
                                 </div>
                             </Row>
 
-
                             <Row className="mb-3">
-                                <label htmlFor="totalDuration" className="col-sm-12 col-form-label form-label">
-                                    Total Duration
-                                </label>
+                                <label htmlFor="totalDuration" className="col-sm-12 col-form-label form-label">Total Duration</label>
                                 <div className="col-md-12 col-12">
                                     <input
                                         type="text"
                                         className="form-control"
-                                        placeholder="Enter Total Duration"
+                                        placeholder="Enter Duration"
                                         id="totalDuration"
                                         value={formData.totalDuration}
                                         onChange={handleInputChange}
@@ -240,7 +260,6 @@ const UpdateCourse = () => {
                                     />
                                 </div>
                             </Row>
-
 
                             <Row className="mb-3">
                                 <label htmlFor="description" className="col-sm-12 col-form-label form-label">
@@ -266,7 +285,7 @@ const UpdateCourse = () => {
                                     </Button>
                                 </Col>
                             </Row>
-                            
+
                         </Form>
                     </Card.Body>
                 </Card>
