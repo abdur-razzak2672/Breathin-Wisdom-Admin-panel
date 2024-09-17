@@ -5,6 +5,10 @@ import ApiService from '../../utils/ApiServices';
 import ApiUrl from '../../utils/ApiUrl';
 import { toast } from 'react-toastify';
 import Loader from '../Spinner';
+import dynamic from 'next/dynamic';
+const JoditEditor = dynamic(() => import('jodit-react'), {
+  ssr: false,
+});
 
 const UpdateCourse = () => {
     const router = useRouter();
@@ -15,7 +19,7 @@ const UpdateCourse = () => {
     const [categories, setCategories] = useState([]);
     const [formData, setFormData] = useState({
         title: '',
-        description: '',
+        shortDescription: '',
         price: '',
         trailorUrl: '',
         totalDuration: '',
@@ -23,6 +27,8 @@ const UpdateCourse = () => {
         courseCategoryId: '',
         discountPercent: '',
         discountPrice: '',
+        courseOverview: "",
+        courseDetail: "",
     });
 
     const getCourseDetails = async () => {
@@ -32,7 +38,7 @@ const UpdateCourse = () => {
             const course = response.result;
             setFormData({
                 title: course.title,
-                description: course.description,
+                shortDescription: course.shortDescription,
                 price: course.price,
                 trailorUrl: course.trailorUrl,
                 totalDuration: course.totalDuration,
@@ -40,6 +46,8 @@ const UpdateCourse = () => {
                 courseCategoryId: course?.courseCategory?.id || '',
                 discountPercent: course.discountPercent || '',
                 discountPrice: course.discountPrice || '',
+                courseOverview: course.courseOverview || '',
+                courseDetail: course.courseDetail || '',
             });
             setImagePreview(course.image || '');
         } catch (error) {
@@ -89,19 +97,23 @@ const UpdateCourse = () => {
         const selectedValue = e.target.value;
         setFormData({ ...formData, courseCategoryId: selectedValue });
     };
-
+    const handleEditorChange = (content, field) => {
+        setFormData({ ...formData, [field]: content });
+      };
     const handleSubmit = async (e) => {
         e.preventDefault();
         setFormLoading(true);
         const formDataInstance = new FormData();
         formDataInstance.append('title', formData.title);
-        formDataInstance.append('description', formData.description);
+        formDataInstance.append('shortDescription', formData.shortDescription);
         formDataInstance.append('price', formData.price);
         formDataInstance.append('trailorUrl', formData.trailorUrl);
         formDataInstance.append('totalDuration', formData.totalDuration);
         formDataInstance.append('courseCategoryId', formData.courseCategoryId);
         formDataInstance.append('discountPercent', formData.discountPercent);
         formDataInstance.append('discountPrice', formData.discountPrice);
+        formDataInstance.append('courseOverview', formData.courseOverview);
+        formDataInstance.append('courseDetail', formData.courseDetail);
 
         if (typeof formData.image === 'string') {
             formDataInstance.append('image', formData.image);
@@ -124,14 +136,15 @@ const UpdateCourse = () => {
     }
 
     return (
-        <Row className="mb-8 d-flex justify-content-center">
-            <Col xl={7} lg={7} md={8} sm={12} xs={12}>
+        <Form onSubmit={handleSubmit}>
+            <Row className="mb-8 d-flex justify-content-center">
+            <Col xl={6} lg={6} md={6} sm={12} xs={12}>
                 <Card>
                     <Card.Body>
                         <div className="mb-3">
                             <h5 className="mb-1">Update Course</h5>
                         </div>
-                        <Form onSubmit={handleSubmit}>
+                        
                             <Row className="mb-3">
                                 <Form.Label className="col-md-4" htmlFor="category">Course Category</Form.Label>
                                 <Col md={12} xs={12}>
@@ -262,15 +275,15 @@ const UpdateCourse = () => {
                             </Row>
 
                             <Row className="mb-3">
-                                <label htmlFor="description" className="col-sm-12 col-form-label form-label">
-                                    Course Description
+                                <label htmlFor="shortDescription" className="col-sm-12 col-form-label form-label">
+                                    Short Description
                                 </label>
                                 <div className="col-md-12 col-12">
                                     <textarea
                                         className="form-control"
-                                        placeholder="Enter Full Description"
-                                        id="description"
-                                        value={formData.description}
+                                        placeholder="Enter Short Description"
+                                        id="shortDescription"
+                                        value={formData.shortDescription}
                                         onChange={handleInputChange}
                                         required
                                     />
@@ -285,12 +298,43 @@ const UpdateCourse = () => {
                                     </Button>
                                 </Col>
                             </Row>
-
-                        </Form>
                     </Card.Body>
                 </Card>
             </Col>
+
+            <Col clas xl={6} lg={6} md={6} sm={12} xs={12}>
+          <Card className='mb-3'>
+            <Card.Body>
+              <Row>
+                <label htmlFor="courseOverview" className="col-sm-12 col-form-label form-label">Course Overview</label>
+                <div className="col-md-12 col-12">
+                  <JoditEditor
+                    value={formData?.courseOverview}
+                    onBlur={newContent => handleEditorChange(newContent, 'courseOverview')}
+                  />
+                </div>
+              </Row>
+            </Card.Body>
+          </Card>
+
+          <Col xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Card >
+                <Card.Body>
+                  <Row className="mb-3">
+                    <label htmlFor="courseDetail" className="col-sm-12 col-form-label form-label">Course Detail</label>
+                    <div className="col-md-12 col-12">
+                      <JoditEditor
+                        value={formData?.courseDetail}
+                        onBlur={newContent => handleEditorChange(newContent, 'courseDetail')}
+                      />
+                    </div>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </Col>
+        </Col>
         </Row>
+        </Form>
     );
 };
 

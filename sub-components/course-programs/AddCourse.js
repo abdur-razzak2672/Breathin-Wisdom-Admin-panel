@@ -4,13 +4,17 @@ import ApiService from '../../utils/ApiServices';
 import ApiUrl from '../../utils/ApiUrl';
 import { toast } from 'react-toastify';
 import Loader from '../Spinner';
+import dynamic from 'next/dynamic';
+const JoditEditor = dynamic(() => import('jodit-react'), {
+  ssr: false,
+});
 
 const AddCourse = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
-    description: "",
+    shortDescription: "",
     price: "",
     trailorUrl: "",
     totalDuration: "",
@@ -18,6 +22,8 @@ const AddCourse = () => {
     categoryId: "",
     discountPercent: 0,
     discountPrice: 0,
+    courseOverview: "",
+    courseDetail: "",
   });
   const fileInputRef = useRef(null);
 
@@ -46,7 +52,6 @@ const AddCourse = () => {
     } else {
       let updatedFormData = { ...formData, [id]: value };
 
-      // Automatically calculate discountPrice based on price and discountPercent
       if (id === 'price' || id === 'discountPercent') {
         const price = id === 'price' ? parseFloat(value) || 0 : parseFloat(formData.price) || 0;
         const discountPercent = id === 'discountPercent' ? parseFloat(value) || 0 : parseFloat(formData.discountPercent) || 0;
@@ -56,6 +61,10 @@ const AddCourse = () => {
 
       setFormData(updatedFormData);
     }
+  };
+
+  const handleEditorChange = (content, field) => {
+    setFormData({ ...formData, [field]: content });
   };
 
   const handleCategoryChange = (e) => {
@@ -69,13 +78,15 @@ const AddCourse = () => {
 
     const formDataInstance = new FormData();
     formDataInstance.append('title', formData.title);
-    formDataInstance.append('description', formData.description);
+    formDataInstance.append('shortDescription', formData.shortDescription);
     formDataInstance.append('price', formData.price);
     formDataInstance.append('trailorUrl', formData.trailorUrl);
     formDataInstance.append('totalDuration', formData.totalDuration);
     formDataInstance.append('categoryId', formData.categoryId);
     formDataInstance.append('discountPercent', formData.discountPercent);
     formDataInstance.append('discountPrice', formData.discountPrice);
+    formDataInstance.append('courseOverview', formData.courseOverview);
+    formDataInstance.append('courseDetail', formData.courseDetail);
 
     if (formData.image) {
       formDataInstance.append('image', formData.image);
@@ -86,7 +97,7 @@ const AddCourse = () => {
       toast.success('Course created successfully!');
       setFormData({
         title: "",
-        description: "",
+        shortDescription: "",
         price: "",
         trailorUrl: "",
         totalDuration: "",
@@ -94,6 +105,8 @@ const AddCourse = () => {
         categoryId: "",
         discountPercent: 0,
         discountPrice: 0,
+        courseOverview: "",
+        courseDetail: "",
       });
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -110,14 +123,15 @@ const AddCourse = () => {
   }, []);
 
   return (
-    <Row className="mb-8 d-flex justify-content-center">
-      <Col xl={7} lg={7} md={8} sm={12} xs={12}>
-        <Card>
-          <Card.Body>
-            <div className="mb-3">
-              <h5 className="mb-1">Fill out the form to create a Course</h5>
-            </div>
-            <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit}>
+      <Row className="mb-8 d-flex justify-content-center">
+        <Col xl={6} lg={6} md={6} sm={12} xs={12}>
+          <Card>
+            <Card.Body>
+              <div className="mb-3">
+                <h5 className="mb-1">Fill out the form to create a Course</h5>
+              </div>
+
               <Row className="mb-3">
                 <Form.Label className="col-md-4" htmlFor="category">Select Category</Form.Label>
                 <Col md={12} xs={12}>
@@ -133,9 +147,7 @@ const AddCourse = () => {
               </Row>
 
               <Row className="mb-3">
-                <label htmlFor="title" className="col-sm-12 col-form-label form-label">
-                  Course Name
-                </label>
+                <label htmlFor="title" className="col-sm-12 col-form-label form-label">Course Name</label>
                 <div className="col-md-12 col-12">
                   <input
                     type="text"
@@ -151,9 +163,7 @@ const AddCourse = () => {
 
               <Row className="mb-3">
                 <Col md={8}>
-                  <label htmlFor="price" className="col-sm-12 col-form-label form-label">
-                    Course Price
-                  </label>
+                  <label htmlFor="price" className="col-sm-12 col-form-label form-label">Course Price</label>
                   <div className="col-md-12 col-12">
                     <input
                       type="number"
@@ -168,9 +178,7 @@ const AddCourse = () => {
                 </Col>
 
                 <Col md={4}>
-                  <label htmlFor="discountPercent" className="col-sm-12 col-form-label form-label">
-                    Discount Percent
-                  </label>
+                  <label htmlFor="discountPercent" className="col-sm-12 col-form-label form-label">Discount Percent</label>
                   <div className="col-md-12 col-12">
                     <input
                       type="number"
@@ -186,9 +194,7 @@ const AddCourse = () => {
               </Row>
 
               <Row className="mb-3">
-                <label htmlFor="discountPrice" className="col-sm-12 col-form-label form-label">
-                  Discount Price
-                </label>
+                <label htmlFor="discountPrice" className="col-sm-12 col-form-label form-label">Discount Price</label>
                 <div className="col-md-12 col-12">
                   <input
                     type="number"
@@ -201,9 +207,7 @@ const AddCourse = () => {
               </Row>
 
               <Row className="mb-3">
-                <label htmlFor="image" className="col-sm-12 col-form-label form-label">
-                  Upload Image
-                </label>
+                <label htmlFor="image" className="col-sm-12 col-form-label form-label">Upload Image</label>
                 <div className="col-md-12 col-12">
                   <input
                     type="file"
@@ -214,10 +218,9 @@ const AddCourse = () => {
                   />
                 </div>
               </Row>
+
               <Row className="mb-3">
-                <label htmlFor="trailorUrl" className="col-sm-12 col-form-label form-label">
-                  Trailor URL
-                </label>
+                <label htmlFor="trailorUrl" className="col-sm-12 col-form-label form-label">Trailor URL</label>
                 <div className="col-md-12 col-12">
                   <input
                     type="text"
@@ -231,11 +234,8 @@ const AddCourse = () => {
                 </div>
               </Row>
 
-
               <Row className="mb-3">
-                <label htmlFor="totalDuration" className="col-sm-12 col-form-label form-label">
-                  Total Duration
-                </label>
+                <label htmlFor="totalDuration" className="col-sm-12 col-form-label form-label">Total Duration</label>
                 <div className="col-md-12 col-12">
                   <input
                     type="text"
@@ -251,34 +251,60 @@ const AddCourse = () => {
 
 
               <Row className="mb-3">
-                <label htmlFor="description" className="col-sm-12 col-form-label form-label">
-                  Course Description
-                </label>
+                <label htmlFor="shortDescription" className="col-sm-12 col-form-label form-label">Short Description</label>
                 <div className="col-md-12 col-12">
                   <textarea
+                    type="textarea"
                     className="form-control"
-                    placeholder="Enter Full Description"
-                    id="description"
-                    value={formData?.description}
+                    placeholder="Enter Short Description"
+                    id="shortDescription"
+                    value={formData?.shortDescription}
                     onChange={handleInputChange}
                     required
                   />
                 </div>
               </Row>
+              <Button type="submit" variant="primary">
+                {loading ? <Loader /> : "Add Course"}
+              </Button>
 
-
-              <Row className="align-items-center">
-                <Col md={12} xs={12} className="mt-4">
-                  <Button variant="primary" type="submit" disabled={loading}>
-                    {loading ? <Loader loading={loading} /> : 'Save Changes'}
-                  </Button>
-                </Col>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col clas xl={6} lg={6} md={6} sm={12} xs={12}>
+          <Card className='mb-3'>
+            <Card.Body>
+              <Row>
+                <label htmlFor="courseOverview" className="col-sm-12 col-form-label form-label">Course Overview</label>
+                <div className="col-md-12 col-12">
+                  <JoditEditor
+                    value={formData?.courseOverview}
+                    onBlur={newContent => handleEditorChange(newContent, 'courseOverview')}
+                  />
+                </div>
               </Row>
-            </Form>
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
+            </Card.Body>
+          </Card>
+
+          <Col xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Card >
+                <Card.Body>
+                  <Row className="mb-3">
+                    <label htmlFor="courseDetail" className="col-sm-12 col-form-label form-label">Course Detail</label>
+                    <div className="col-md-12 col-12">
+                      <JoditEditor
+                        value={formData?.courseDetail}
+                        onBlur={newContent => handleEditorChange(newContent, 'courseDetail')}
+                      />
+                    </div>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </Col>
+        </Col>
+
+      </Row>
+    </Form>
   );
 };
 

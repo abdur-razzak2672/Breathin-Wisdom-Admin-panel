@@ -75,7 +75,7 @@ const AllCourses = () => {
                     <th>Price</th>
                     {/* <th>Status</th> */}
                     <th>Course Information</th>
-                    <th>Description</th>
+                    <th>Short Description</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -85,7 +85,7 @@ const AllCourses = () => {
                       return (
                         <tr key={index}>
                           <th className="align-middle" scope="row">{index + 1}</th>
-                          <td className="align-middle">
+                          <td className="align-middle table-column">
                             <div className="d-flex align-items-center">
                               <div>
                                 <div className={`icon-shape icon-md border p-4 rounded  bg-white`}>
@@ -117,7 +117,7 @@ const AllCourses = () => {
                            Total Duration : {course?.totalDuration}
 
                           </td>
-                          <td className="align-middle">{course?.description}</td>
+                          <td className="align-middle table-column">{course?.shortDescription}</td>
                           <td className="align-middle">
 
                             <div className="d-flex">

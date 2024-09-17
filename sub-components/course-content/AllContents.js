@@ -72,7 +72,6 @@ const AllContents = () => {
                     <th>#</th>
                     <th>Content Name</th>                    
                     <th>Course Name</th>
-                     <th>Duration</th>
                      <th>Description</th>
                     <th>Action</th>
                   </tr>
@@ -83,10 +82,9 @@ const AllContents = () => {
                       return (
                         <tr key={index}>
                           <th className="align-middle" scope="row">{index + 1}</th>
-                          <td className="align-middle">{content?.title}</td>
-                          <td className="align-middle">{content?.course?.name}</td>
-                           <td className="align-middle">{content?.duration}</td>
-                           <td className="align-middle">{content?.description}</td>
+                          <td className="align-middle table-column">{content?.title}</td>
+                          <td className="align-middle table-column">{content?.course?.name}</td>
+                          <td className="align-middle table-column">{content?.description}</td>
                           <td className="align-middle">
 
                             <div className="d-flex">

@@ -24,6 +24,11 @@ const ApiService = {
 
 
   async postApiService(url, data, config = {}) {
+
+    for (const [key, value] of data.entries()) {
+  console.log(`${key}:`, value,url);
+}
+
     try {
       const response = await axios.post(url, data, config);
       return response.data;
