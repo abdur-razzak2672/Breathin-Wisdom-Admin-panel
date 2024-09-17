@@ -1,7 +1,12 @@
 .category-card {
     overflow-x: auto;
   }
-  
+  .table-column {
+     width: 400px; 
+    word-wrap: break-word;
+    white-space: normal; 
+    height:"100%"
+   }
  
  
   
