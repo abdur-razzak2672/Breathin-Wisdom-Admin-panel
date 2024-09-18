@@ -1,4 +1,5 @@
 const baseUrl = "http://localhost:4001/admin/api/v1/"
+const baseUrl2 = "http://localhost:4005/api/v1/"
 const ApiUrl = {
   CREATE_CATEGORY: baseUrl + 'course_category',
   GET_CATEGORY_LIST: baseUrl + 'course_category',
@@ -20,6 +21,11 @@ const ApiUrl = {
   UPDATE_CONTENT: baseUrl + 'content',
   DETAIL_CONTENT: baseUrl + 'content',
   DELETE_CONTENT: baseUrl + 'content',
+
+  // package
+  GET_ALL_PACKAGES: baseUrl2 + 'subscriptions',
+  CREATE_PACKAGE: baseUrl2 + 'subscriptions',
+  UPDATE_PACKAGE_STATUS: (id) => `${baseUrl2}subscriptions/${id}/status`,
 
 };
 export default ApiUrl;

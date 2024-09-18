@@ -52,7 +52,16 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/course-program/all-courses', name: 'All Courses' },
 			{ id: uuid(), link: '/course-program/add-course', name: 'Add Course'},
 		]
-	},	
+	},
+	{
+		id: uuid(),
+		title: 'Subscription Packages',
+		icon: 'layers',
+		children: [
+			{ id: uuid(), link: '/course-package/all-packages', name: 'All Packages' },
+			{ id: uuid(), link: '/course-package/add-package', name: 'Add Package'},
+		]
+	},
 	{
 		id: uuid(),
 		title: 'Course Content',
