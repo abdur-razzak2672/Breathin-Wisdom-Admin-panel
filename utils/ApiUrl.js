@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:4001/admin/api/v1/"
+const baseUrl = "http://localhost:4001/api/v1/admin/"
 const ApiUrl = {
   CREATE_CATEGORY: baseUrl + 'course_category',
   GET_CATEGORY_LIST: baseUrl + 'course_category',
