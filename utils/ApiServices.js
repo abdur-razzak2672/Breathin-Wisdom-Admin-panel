@@ -3,9 +3,14 @@ import { toast } from 'react-toastify';
 const ApiService = {
 
 
-  async getApiService(url, config = {}) {
+  async getApiService(url) {
     try {
-      const response = await axios.get(url, config);
+    const sharedSecret = process.env.NEXT_PUBLIC_GATEWAY_SHARED_SECRET;
+    const headers = {
+      'x-shared-secret': sharedSecret,
+      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjMsImVtYWlsIjoicmFqQGdtYWlsMS5jb20iLCJyb2xlIjoic3VwZXJBZG1pbiIsImlhdCI6MTcyNjkxNjg1MSwiZXhwIjoxNzI2OTE4NjUxfQ.M4HprsmuU53WY7hljVkuhNYXdBzLRcir4DRD3yp_DGk`,
+    };
+      const response = await axios.get(url, {headers});
       return response.data;
     } catch (error) {
       handleError(error);
@@ -13,9 +18,13 @@ const ApiService = {
   },
 
 
-  async getApiDetails(url, config = {}) {
+  async getApiDetails(url) {
     try {
-      const response = await axios.get(url, config);
+    const sharedSecret = process.env.NEXT_PUBLIC_GATEWAY_SHARED_SECRET;
+    const headers = {
+      'x-shared-secret': sharedSecret
+    };
+      const response = await axios.get(url, {headers});
       return response.data;
     } catch (error) {
       handleError(error);
@@ -23,14 +32,13 @@ const ApiService = {
   },
 
 
-  async postApiService(url, data, config = {}) {
-
-    for (const [key, value] of data.entries()) {
-  console.log(`${key}:`, value,url);
-}
-
+  async postApiService(url, data) {
     try {
-      const response = await axios.post(url, data, config);
+      const sharedSecret = process.env.NEXT_PUBLIC_GATEWAY_SHARED_SECRET;
+      const headers = {
+        'x-shared-secret': sharedSecret
+      };
+      const response = await axios.post(url, data, {headers});
       return response.data;
     } catch (error) {
       handleError(error);
@@ -38,10 +46,13 @@ const ApiService = {
   },
 
 
-  async putApiService(url, data, config = {}) {
+  async putApiService(url, data) {
     try {
-      console.log(data, url, config)
-      const response = await axios.put(url, data, config);
+      const sharedSecret = process.env.NEXT_PUBLIC_GATEWAY_SHARED_SECRET;
+      const headers = {
+        'x-shared-secret': sharedSecret
+      };
+      const response = await axios.put(url, data, {headers});
       return response.data;
     } catch (error) {
       handleError(error);
@@ -49,9 +60,13 @@ const ApiService = {
   },
 
 
-  async deleteApiService(url, config = {}) {
+  async deleteApiService(url) {
     try {
-      const response = await axios.delete(url, config);
+      const sharedSecret = process.env.NEXT_PUBLIC_GATEWAY_SHARED_SECRET;
+      const headers = {
+        'x-shared-secret': sharedSecret
+      };
+      const response = await axios.delete(url, {headers});
       return response.data;
     } catch (error) {
       handleError(error);
@@ -69,6 +84,10 @@ const handleError = (error) => {
   switch (status) {
     case 404:
       console.error('Not Found:', data.message || 'The requested resource was not found.');
+      toast.error(data.message);
+      throw new Error('Resource not found.');
+    case 401:
+      console.error('Unauthorized', data.message || 'Access Denied');
       toast.error(data.message);
       throw new Error('Resource not found.');
     case 403:
