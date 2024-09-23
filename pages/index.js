@@ -1,65 +1,131 @@
-// import node module libraries
-import { Fragment } from "react";
-import Link from 'next/link';
-import { Container, Col, Row } from 'react-bootstrap';
+ 
 
-// import widget/custom components
-import { StatRightTopIcon } from "widgets";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import { Row, Col, Card, Form, Button, Image } from "react-bootstrap";
+import Link from "next/link";
+import AuthLayout from "layouts/AuthLayout";
+import Loader from "sub-components/Spinner";
+import ApiService from "utils/ApiServices";
+import ApiUrl from "utils/ApiUrl";
+import { toast } from "react-toastify";
 
-// import sub components
-import { ActiveProjects, Teams, TasksPerformance } from "sub-components";
-
-// import required data files
-import ProjectsStatsData from "data/dashboard/ProjectsStatsData";
 
 const Home = () => {
-    return (
-        <Fragment>
-            <div className="bg-primary pt-10 pb-21"></div>
-            <Container fluid className="mt-n22 px-6">
-                <Row>
-                    <Col lg={12} md={12} xs={12}>
-                        {/* Page header */}
-                        <div>
-                            <div className="d-flex justify-content-between align-items-center">
-                                <div className="mb-2 mb-lg-0">
-                                    <h3 className="mb-0  text-white">Dashboard</h3>
-                                </div>
-                                <div>
-                                    <Link href="#" className="btn btn-white">Create New Project</Link>
-                                </div>
-                            </div>
-                        </div>
-                    </Col>
-                    {ProjectsStatsData.map((item, index) => {
-                        return (
-                            <Col xl={3} lg={6} md={12} xs={12} className="mt-6" key={index}>
-                                <StatRightTopIcon info={item} />
-                            </Col>
-                        )
-                    })}
-                </Row>
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [loading, setLoading] = useState(false);
 
-                {/* Active Projects  */}
-                <ActiveProjects />
 
-                <Row className="my-6">
-                    <Col xl={4} lg={12} md={12} xs={12} className="mb-6 mb-xl-0">
+  const handleFormInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [id]: value }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await ApiService.postApiService(ApiUrl.ADMIN_LOGIN, formData);
+      const userData = response.data
+      const userRole = userData?.user?.UserRole?.role
 
-                        {/* Tasks Performance  */}
-                        <TasksPerformance />
+ 
+      if(userRole !=="user"){
+        const userInfo = {
+            id: userData?.user?.id,
+            userName :userData?.user?.firstName +" "+ userData?.user?.lastName,
+            accessToken: userData?.token
+          }
+          setFormData({
+            email: "",
+            password: "",
+          });
+        Cookies.set("userInfo", JSON.stringify(userInfo));  
+        if (userInfo) {
+          router.push("/")
+        }
+        toast.success('Admin Login successfully!');
 
-                    </Col>
-                    {/* card  */}
-                    <Col xl={8} lg={12} md={12} xs={12}>
+      }else{
+        toast.error('Only Admin can login this portal');
+      }
+    } catch (error) {
+      console.error(error.message || 'Error creating content.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                        {/* Teams  */}
-                        <Teams />
+  return (
+    <Row className="align-items-center justify-content-center g-0 min-vh-100">
+      <Col xxl={4} lg={6} md={8} xs={12} className="py-8 py-xl-0">
+        <Card className="smooth-shadow-md">
+          <Card.Body className="p-6">
+            <div className="mb-4">
+              <Link href="/">
+                <h1>Admin Login</h1>
+              </Link>
+              <p className="mb-6">Please enter your Admin information.</p>
+            </div>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-3" controlId="email">
+                <Form.Label>Username or email</Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  placeholder="Enter address here"
+                  value={formData.email}
+                  onChange={handleFormInputChange}
+                  required
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  name="password"
+                  placeholder="**************"
+                  value={formData.password}
+                  onChange={handleFormInputChange}
+                  required
+                />
+              </Form.Group>
+              <div className="d-grid">
+                <Button variant="primary" type="submit" disabled={loading}>
+                  {loading ? <Loader loading={loading} /> : "Sign In"}
+                </Button>
+              </div>
+            </Form>
+          </Card.Body>
+        </Card>
+      </Col>
+    </Row>
+  );
+};
 
-                    </Col>
-                </Row>
-            </Container>
-        </Fragment>
-    )
+Home.Layout = AuthLayout;
+
+
+export async function getServerSideProps({ req, res }) {
+  const userInfo = req.cookies.userInfo;
+
+  if (userInfo) {
+    return {
+      redirect: {
+        destination: '/dashboard',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
 }
+
 export default Home;
+
