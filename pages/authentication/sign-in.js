@@ -1,81 +1,94 @@
-// import node module libraries
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 import { Row, Col, Card, Form, Button, Image } from "react-bootstrap";
 import Link from "next/link";
-
-// import authlayout to override default layout
 import AuthLayout from "layouts/AuthLayout";
+import Loader from "sub-components/Spinner";
+import ApiService from "utils/ApiServices";
+import ApiUrl from "utils/ApiUrl";
+import { toast } from "react-toastify";
+
 
 const SignIn = () => {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+
+  const handleFormInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [id]: value }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await ApiService.postApiService(ApiUrl.ADMIN_LOGIN, formData);
+      toast.success('Admin Login successfully!');
+      setFormData({
+        email: "",
+        password: "",
+      });
+      const userData = response.data
+      const userInfo = {
+        id: userData?.user?.id,
+        userName :userData?.user?.firstName +" "+ userData?.user?.lastName,
+        accessToken: userData?.token
+
+      }
+      Cookies.set("userInfo", JSON.stringify(userInfo));  
+      if (userInfo) {
+        router.push("/")
+      }
+    } catch (error) {
+      console.error(error.message || 'Error creating content.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Row className="align-items-center justify-content-center g-0 min-vh-100">
       <Col xxl={4} lg={6} md={8} xs={12} className="py-8 py-xl-0">
-        {/* Card */}
         <Card className="smooth-shadow-md">
-          {/* Card body */}
           <Card.Body className="p-6">
             <div className="mb-4">
               <Link href="/">
-                <Image
-                  src="/images/brand/logo/logo-primary.svg"
-                  className="mb-2"
-                  alt=""
-                />
+                <h1>Admin Login</h1>
               </Link>
-              <p className="mb-6">Please enter your user information.</p>
+              <p className="mb-6">Please enter your Admin information.</p>
             </div>
-            {/* Form */}
-            <Form>
-              {/* Username */}
-              <Form.Group className="mb-3" controlId="username">
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-3" controlId="email">
                 <Form.Label>Username or email</Form.Label>
                 <Form.Control
                   type="email"
-                  name="username"
+                  name="email"
                   placeholder="Enter address here"
-                  required=""
+                  value={formData.email}
+                  onChange={handleFormInputChange}
+                  required
                 />
               </Form.Group>
-
-              {/* Password */}
               <Form.Group className="mb-3" controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
                   type="password"
                   name="password"
                   placeholder="**************"
-                  required=""
+                  value={formData.password}
+                  onChange={handleFormInputChange}
+                  required
                 />
               </Form.Group>
-
-              {/* Checkbox */}
-              <div className="d-lg-flex justify-content-between align-items-center mb-4">
-                <Form.Check type="checkbox" id="rememberme">
-                  <Form.Check.Input type="checkbox" />
-                  <Form.Check.Label>Remember me</Form.Check.Label>
-                </Form.Check>
-              </div>
-              <div>
-                {/* Button */}
-                <div className="d-grid">
-                  <Button variant="primary" type="submit">
-                    Sign In
-                  </Button>
-                </div>
-                <div className="d-md-flex justify-content-between mt-4">
-                  <div className="mb-2 mb-md-0">
-                    <Link href="/authentication/sign-up" className="fs-5">
-                      Create An Account{" "}
-                    </Link>
-                  </div>
-                  <div>
-                    <Link
-                      href="/authentication/forget-password"
-                      className="text-inherit fs-5"
-                    >
-                      Forgot your password?
-                    </Link>
-                  </div>
-                </div>
+              <div className="d-grid">
+                <Button variant="primary" type="submit" disabled={loading}>
+                  {loading ? <Loader loading={loading} /> : "Sign In"}
+                </Button>
               </div>
             </Form>
           </Card.Body>
@@ -86,5 +99,23 @@ const SignIn = () => {
 };
 
 SignIn.Layout = AuthLayout;
+
+
+export async function getServerSideProps({ req, res }) {
+  const userInfo = req.cookies.userInfo;
+
+  if (userInfo) {
+    return {
+      redirect: {
+        destination: '/dashboard',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+}
 
 export default SignIn;
