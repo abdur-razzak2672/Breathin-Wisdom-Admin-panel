@@ -1,3 +1,5 @@
+const baseUrl = "http://localhost:3012/api/v1/program/admin/private/"
+const baseUrl_auth = "http://localhost:3012/api/v1/auth"
 const baseUrl = "http://localhost:4001/admin/api/v1/"
 const baseUrl2 = "http://localhost:4005/api/v1/"
 const ApiUrl = {
@@ -26,6 +28,11 @@ const ApiUrl = {
   GET_ALL_PACKAGES: baseUrl2 + 'subscriptions',
   CREATE_PACKAGE: baseUrl2 + 'subscriptions',
   UPDATE_PACKAGE_STATUS: (id) => `${baseUrl2}subscriptions/${id}/status`,
+
+
+  // auth
+  ADMIN_LOGIN: baseUrl_auth + '/public/login',
+
 
 };
 export default ApiUrl;
