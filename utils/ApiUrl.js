@@ -1,6 +1,6 @@
 const baseUrl = "http://localhost:3012/api/v1/program/admin/private/"
 const baseUrl_auth = "http://localhost:3012/api/v1/auth"
-const baseUrl2 = "http://localhost:4005/api/v1/"
+const baseUrl2 = "http://localhost:3012/api/v1/auth/payment"
 const ApiUrl = {
   CREATE_CATEGORY: baseUrl + 'course_category',
   GET_CATEGORY_LIST: baseUrl + 'course_category',
@@ -24,9 +24,9 @@ const ApiUrl = {
   DELETE_CONTENT: baseUrl + 'content',
 
   // package
-  GET_ALL_PACKAGES: baseUrl2 + 'subscriptions',
-  CREATE_PACKAGE: baseUrl2 + 'subscriptions',
-  UPDATE_PACKAGE_STATUS: (id) => `${baseUrl2}subscriptions/${id}/status`,
+  GET_ALL_PACKAGES: baseUrl2 + 'private/subscriptions',
+  CREATE_PACKAGE: baseUrl2 + 'private/subscriptions',
+  UPDATE_PACKAGE_STATUS: (id) => `private/${baseUrl2}subscriptions/${id}/status`,
 
 
   // auth
