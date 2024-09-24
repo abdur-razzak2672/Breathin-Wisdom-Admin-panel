@@ -20,6 +20,17 @@ const ApiService = {
     }
   },
 
+  async patchApiService(url, data, config = {}) {  // Patch Service
+    try {
+      console.log(data, url, config);
+      const response = await axios.patch(url, data, config);
+      return response.data;
+    } catch (error) {
+      handleError(error);
+    }
+  },
+
+
   async getApiDetails(url, router) {
     const accessToken = getAccessToken();
     if (!accessToken) return;
