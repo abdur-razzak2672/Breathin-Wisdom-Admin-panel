@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:3012/api/v1/program/admin/private/"
+const baseUrl = "http://localhost:3012/api/v1/program/admin/"
 const baseUrl_auth = "http://localhost:3012/api/v1/auth"
 const baseUrl2 = "http://localhost:3012/api/v1/auth/payment"
 const ApiUrl = {

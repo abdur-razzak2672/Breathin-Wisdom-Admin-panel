@@ -120,9 +120,11 @@ const handleError = (error, router) => {
       toast.error(data.message || 'The requested resource was not found.');
       throw new Error('Resource not found.');
     case 401:
-      console.error('Unauthorized:', data.message || 'Access Denied');
+      toast.error('Token Session Expired please login');
       Cookies.remove("userInfo");
-      router.push("/"); // Use router here passed from the component
+      window.location.reload()
+      console.error('Unauthorized:', data.message || 'Access Denied');
+      // Use router here passed from the component
       toast.error(data.message || 'Unauthorized access, please login.');
       throw new Error('Unauthorized access.');
     case 403:
