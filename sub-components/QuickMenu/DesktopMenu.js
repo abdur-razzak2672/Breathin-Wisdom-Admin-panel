@@ -29,7 +29,7 @@ function DesktopMenu() {
     useEffect(() => {
         const userInfo = Cookies.get("userInfo"); 
         if (!userInfo) {
-            router.push("/authentication/sign-in");
+            router.push("/");
         }}, []);
 
 
