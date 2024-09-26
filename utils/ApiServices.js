@@ -21,9 +21,14 @@ const ApiService = {
   },
 
   async patchApiService(url, data, config = {}) {  // Patch Service
+    const accessToken = getAccessToken();
+    if (!accessToken) return;
     try {
+      const headers = {
+        'Authorization': `Bearer ${accessToken}`,
+      };
       console.log(data, url, config);
-      const response = await axios.patch(url, data, config);
+      const response = await axios.patch(url, data, {headers});
       return response.data;
     } catch (error) {
       handleError(error);

@@ -17,7 +17,7 @@ const AllPackages = () => {
     try {
       setLoading(true);
       const response = await ApiService.getApiService(ApiUrl.GET_ALL_PACKAGES);
-      setAllPackage(response);
+      setAllPackage(response.results);
     } catch (error) {
       console.error("Error fetching Packages:", error.message);
     } finally {

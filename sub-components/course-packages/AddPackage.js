@@ -128,7 +128,7 @@ const AddContent = () => {
       },
     });
 
-    toast.success('Content created successfully!');
+    toast.success('Bundle offer created successfully!');
 
     // Reset the form after successful submission
     setFormData({
@@ -144,8 +144,8 @@ const AddContent = () => {
       // promotionPrice: "", // Added promotionPrice in reset
     }]);
   } catch (error) {
-    console.error(error.message || 'Error creating content.');
-    toast.error('Error creating content. Please try again.');
+    console.error(error.message || 'Error creating Bundle offer.');
+    toast.error('Error creating Bundle offer. Please try again.');
   } finally {
     setLoading(false);
   }
