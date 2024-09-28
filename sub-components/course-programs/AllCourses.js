@@ -111,9 +111,9 @@ const AllCourses = () => {
 
                           </td> */}
                           <td className="align-middle">
-                           Number Of Lecture : {course?.courseContents?.length}<br/>
-                           Number Of Lession : {course?.courseContents?.length}<br/>
-                           Number Of Enrollement : {course?.courseContents?.length}<br/>
+                           Number Of Lecture : {course?.numberOfLectures}<br/>
+                           Number Of Lession : {course?.numberOfLessons}<br/>
+                           Number Of Enrollement : {course?.numberOfLectures}<br/>
                            Total Duration : {course?.totalDuration}
 
                           </td>
