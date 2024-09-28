@@ -71,7 +71,7 @@ const AllPackages = () => {
       <Col md={12} xs={12}>
         <Card>
           <Card.Header className="bg-white d-flex align-items-center justify-content-between py-4 ">
-            <h4 className="mb-0">All Packages</h4>
+            <h4 className="mb-0">All Bundle Packages</h4>
             <h4 className="mb-0">Total Packages: {allPackage?.length || 0}</h4>
           </Card.Header>
           {loading ? (
@@ -85,7 +85,7 @@ const AllPackages = () => {
                   <tr>
                     <th>#</th>
                     <th>Package Name</th>
-                    <th>Subscription Type</th>
+                    <th>Bundle Type</th>
                     <th>Courses</th>
                     <th>Total Amount</th>
                     <th>Action</th>

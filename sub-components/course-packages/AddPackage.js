@@ -4,9 +4,14 @@ import ApiService from '../../utils/ApiServices';
 import ApiUrl from '../../utils/ApiUrl';
 import { toast } from 'react-toastify';
 import Loader from '../Spinner';
+import dynamic from "next/dynamic";
+const JoditEditor = dynamic(() => import('jodit-react'), {
+  ssr: false,
+});
 
 const AddContent = () => {
   const [loading, setLoading] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
   const [courses, setCourses] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
@@ -17,42 +22,33 @@ const AddContent = () => {
       courseID: "",
       courseName: "",
       price: "",
-      discountPrice: "",
+      discountPrice: ""
     },
   ]);
 
-  const getCourses = async () => {
+const getCourses = async () => {
     try {
-      // Dummy data as placeholder for API response
-      const results = [
-        {
-          _id: "66e886acc43c0c6168c2a1e6",
-          title: "Course 1",
-          price: 4,
-          discountPrice: 3.96,
-        },
-        {
-          _id: "66e87619aa462350fc46efa6",
-          title: "Course 2",
-          price: 5,
-          discountPrice: 4.50,
-        },
-        {
-          _id: "66e87369aa462350fc46efa6",
-          title: "Course 3",
-          price: 6,
-          discountPrice: 5.50,
-        },
-      ];
-      setCourses(results);
+      const response = await ApiService.getApiService(ApiUrl.GET_ALL_COURSES);
+      setCourses(response.results);
     } catch (error) {
       toast.error('Failed to fetch courses');
     }
+  };
+const handleEditorChange = (content, field) => {
+    setFormData({ ...formData, [field]: content });
   };
 
   useEffect(() => {
     getCourses();
   }, []);
+
+  useEffect(() => {
+    if (formData.subscribeType === 'promotion') {
+      setShowDescription(true);
+    } else {
+      setShowDescription(false);
+    }
+  }, [formData.subscribeType]);
 
   const handleFormInputChange = (e) => {
     const { id, value } = e.target;
@@ -109,6 +105,9 @@ const AddContent = () => {
     const formDataInstance = new FormData();
     formDataInstance.append('packageName', formData.title);
     formDataInstance.append('subscribeType', formData.subscribeType);
+    if (formData.subscribeType === 'promotion') {
+      formDataInstance.append('description', formData.description);
+    }
 
     courseInputs.forEach((course, index) => {
       formDataInstance.append(`courses[${index}][courseID]`, course.courseID || '');
@@ -180,7 +179,7 @@ const AddContent = () => {
               </Row>
 
               <Row className="mb-3">
-                <Form.Label className="col-md-4" htmlFor="subscribeType">Select Subscription Type</Form.Label>
+                <Form.Label className="col-md-4" htmlFor="subscribeType">Select Bundle Type</Form.Label>
                 <Col md={12} xs={12}>
                   <select
                     className="form-control"
@@ -189,12 +188,24 @@ const AddContent = () => {
                     onChange={handleFormInputChange}
                     required
                   >
-                    <option value="">Select Subscription Type</option>
+                    <option value="">Select Bundle Type</option>
                     <option value="discount">Discount</option>
                     <option value="promotion">Promotion</option>
                   </select>
                 </Col>
               </Row>
+
+              {showDescription && (
+                  <Row className="mb-3">
+                <Form.Label className="col-md-4" htmlFor="subscribeType">Promotion Description</Form.Label>
+                <Col md={12} xs={12}>
+                 <JoditEditor
+                    value={formData?.description}
+                    onBlur={newContent => handleEditorChange(newContent, 'description')}
+                  />
+                </Col>
+              </Row>
+              )}
 
               <Row className="align-items-center">
                 <Col md={12} xs={12} className="mt-4">

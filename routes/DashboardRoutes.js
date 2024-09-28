@@ -55,11 +55,11 @@ export const DashboardMenu = [
 	},
 	{
 		id: uuid(),
-		title: 'Subscription Packages',
+		title: 'Bundle Packages',
 		icon: 'layers',
 		children: [
-			{ id: uuid(), link: '/course-package/all-packages', name: 'All Packages' },
-			{ id: uuid(), link: '/course-package/add-package', name: 'Add Package'},
+			{ id: uuid(), link: '/course-package/all-packages', name: 'All Bundles' },
+			{ id: uuid(), link: '/course-package/add-package', name: 'Add Bundle'},
 		]
 	},
 	{
