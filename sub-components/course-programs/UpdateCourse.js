@@ -47,7 +47,7 @@ const UpdateCourse = () => {
                 image: course.image || '',
                 courseCategoryId: course?.courseCategory?.id || '',
                 prerequisiteCourseId:course?.prerequisiteCourse?.id || '',
-                discountPercent: course.discountPercent || '',
+                discountPercent: course.discountPercent || 0,
                 discountPrice: course.discountPrice || '',
                 courseOverview: course.courseOverview || '',
                 courseDetail: course.courseDetail || '',
@@ -94,22 +94,36 @@ const UpdateCourse = () => {
         }
     }, [courseId]);
 
-    const handleInputChange = (e) => {
-        const { id, value, files } = e.target;
-        if (id === 'image') {
-            const file = files[0] || null;
-            setFormData({ ...formData, image: file });
-            if (file) {
-                setImagePreview(URL.createObjectURL(file));
-            }
-        } else if (id === 'discountPercent') {
-            const discountPercent = value;
-            const discountPrice = (formData.price * (1 - discountPercent / 100)).toFixed(2);
-            setFormData({ ...formData, discountPercent, discountPrice });
-        } else {
-            setFormData({ ...formData, [id]: value });
-        }
-    };
+
+
+
+  const calculateDiscountPrice = (price, discountPercent) => {
+    return price - (price * discountPercent) / 100;
+ };
+
+ const handleInputChange = (e) => {
+   const { id, value, files } = e.target;
+
+   if (id === 'image') {
+    const file = files[0] || null;
+    setFormData({ ...formData, image: file });
+    if (file) {
+        setImagePreview(URL.createObjectURL(file));
+    }
+   } else {
+     let updatedFormData = { ...formData, [id]: value };
+
+     if (id === 'price' || id === 'discountPercent') {
+       const price = id === 'price' ? parseFloat(value) || 0 : parseFloat(formData.price) || 0;
+       const discountPercent = id === 'discountPercent'? parseFloat(value) || 0 : parseFloat(formData.discountPercent) || 0;
+       const discountPrice = calculateDiscountPrice(price, discountPercent);
+       updatedFormData.discountPrice = discountPrice;
+     }
+
+     setFormData(updatedFormData);
+   }
+ };
+
 
     const handleCategoryChange = (e) => {
         const selectedValue = e.target.value;
@@ -134,7 +148,7 @@ const UpdateCourse = () => {
         formDataInstance.append('totalDuration', formData.totalDuration);
         formDataInstance.append('courseCategoryId', formData.courseCategoryId);
         formDataInstance.append('prerequisiteCourseId', formData.prerequisiteCourseId);
-        formDataInstance.append('discountPercent', formData.discountPercent);
+        formDataInstance.append('discountPercent', formData.discountPercent||0);
         formDataInstance.append('discountPrice', formData.discountPrice);
         formDataInstance.append('courseOverview', formData.courseOverview);
         formDataInstance.append('courseDetail', formData.courseDetail);
@@ -248,8 +262,7 @@ const UpdateCourse = () => {
                                             id="discountPercent"
                                             value={formData.discountPercent}
                                             onChange={handleInputChange}
-                                            required
-                                        />
+                                         />
                                     </div>
                                 </Col>
                             </Row>

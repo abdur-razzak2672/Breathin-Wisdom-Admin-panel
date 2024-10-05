@@ -60,8 +60,7 @@ const AddCourse = () => {
   
 
   const calculateDiscountPrice = (price, discountPercent) => {
-    if (!price || !discountPercent) return 0;
-    return price - (price * discountPercent) / 100;
+     return price - (price * discountPercent) / 100;
   };
 
   const handleInputChange = (e) => {
@@ -74,7 +73,7 @@ const AddCourse = () => {
 
       if (id === 'price' || id === 'discountPercent') {
         const price = id === 'price' ? parseFloat(value) || 0 : parseFloat(formData.price) || 0;
-        const discountPercent = id === 'discountPercent' ? parseFloat(value) || 0 : parseFloat(formData.discountPercent) || 0;
+        const discountPercent = id === 'discountPercent'? parseFloat(value) || 0 : parseFloat(formData.discountPercent) || 0;
         const discountPrice = calculateDiscountPrice(price, discountPercent);
         updatedFormData.discountPrice = discountPrice;
       }
@@ -111,7 +110,7 @@ const AddCourse = () => {
     formDataInstance.append('totalDuration', formData.totalDuration);
     formDataInstance.append('categoryId', formData.categoryId);
     formDataInstance.append('prerequisiteCourseId', formData.prerequisiteCourseId);
-    formDataInstance.append('discountPercent', formData.discountPercent);
+    formDataInstance.append('discountPercent', formData.discountPercent||0);
     formDataInstance.append('discountPrice', formData.discountPrice);
     formDataInstance.append('courseOverview', formData.courseOverview);
     formDataInstance.append('courseDetail', formData.courseDetail);
@@ -231,8 +230,7 @@ const AddCourse = () => {
                       id="discountPercent"
                       value={formData?.discountPercent}
                       onChange={handleInputChange}
-                      required
-                    />
+                     />
                   </div>
                 </Col>
               </Row>
