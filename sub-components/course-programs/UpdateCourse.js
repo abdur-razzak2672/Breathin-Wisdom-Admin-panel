@@ -17,6 +17,7 @@ const UpdateCourse = () => {
     const [formLoading, setFormLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState(null);
     const [categories, setCategories] = useState([]);
+    const [programs, setPrograms] = useState([]);
     const [formData, setFormData] = useState({
         title: '',
         shortDescription: '',
@@ -25,6 +26,7 @@ const UpdateCourse = () => {
         totalDuration: '',
         image: '',
         courseCategoryId: '',
+        prerequisiteCourseId:"",
         discountPercent: '',
         discountPrice: '',
         courseOverview: "",
@@ -44,6 +46,7 @@ const UpdateCourse = () => {
                 totalDuration: course.totalDuration,
                 image: course.image || '',
                 courseCategoryId: course?.courseCategory?.id || '',
+                prerequisiteCourseId:course?.prerequisiteCourse?.id || '',
                 discountPercent: course.discountPercent || '',
                 discountPrice: course.discountPrice || '',
                 courseOverview: course.courseOverview || '',
@@ -51,7 +54,7 @@ const UpdateCourse = () => {
             });
             setImagePreview(course.image || '');
         } catch (error) {
-            console.error('Failed to fetch course details.');
+            console.error('Failed to fetch Program details.');
         } finally {
             setLoading(false);
         }
@@ -69,10 +72,25 @@ const UpdateCourse = () => {
         }
     };
 
+
+
+  const getProgramsList = async () => {
+    try {
+      setLoading(true);
+      const response = await ApiService.getApiService(ApiUrl.GET_ALL_COURSES);
+      setPrograms(response?.results);
+    } catch (error) {
+      console.error("Error fetching programs:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
     useEffect(() => {
         if (courseId) {
             getCourseDetails();
             getCategoriesList();
+            getProgramsList()
         }
     }, [courseId]);
 
@@ -97,6 +115,11 @@ const UpdateCourse = () => {
         const selectedValue = e.target.value;
         setFormData({ ...formData, courseCategoryId: selectedValue });
     };
+
+    const handleProgramChange = (e) => {
+        const selectedValue = e.target.value;
+        setFormData({ ...formData, prerequisiteCourseId: selectedValue });
+      };
     const handleEditorChange = (content, field) => {
         setFormData({ ...formData, [field]: content });
       };
@@ -110,6 +133,7 @@ const UpdateCourse = () => {
         formDataInstance.append('trailorUrl', formData.trailorUrl);
         formDataInstance.append('totalDuration', formData.totalDuration);
         formDataInstance.append('courseCategoryId', formData.courseCategoryId);
+        formDataInstance.append('prerequisiteCourseId', formData.prerequisiteCourseId);
         formDataInstance.append('discountPercent', formData.discountPercent);
         formDataInstance.append('discountPrice', formData.discountPrice);
         formDataInstance.append('courseOverview', formData.courseOverview);
@@ -142,11 +166,11 @@ const UpdateCourse = () => {
                 <Card>
                     <Card.Body>
                         <div className="mb-3">
-                            <h5 className="mb-1">Update Course</h5>
+                            <h5 className="mb-1">Update Program</h5>
                         </div>
                         
                             <Row className="mb-3">
-                                <Form.Label className="col-md-4" htmlFor="category">Course Category</Form.Label>
+                                <Form.Label className="col-md-4" htmlFor="category">Program Category</Form.Label>
                                 <Col md={12} xs={12}>
                                     <select
                                         className="form-control"
@@ -165,13 +189,31 @@ const UpdateCourse = () => {
                                 </Col>
                             </Row>
 
+
                             <Row className="mb-3">
-                                <label htmlFor="title" className="col-sm-12 col-form-label form-label">Course Name</label>
+                            <Form.Label className="col-md-4" htmlFor="ppog">Select Prerequisite Program</Form.Label>
+                            <Col md={12} xs={12}>
+                            <select className="form-control" id="ppog" 
+                              value={formData.prerequisiteCourseId}
+
+                            onChange={handleProgramChange}>
+                                <option value="">Select Program</option>
+                                {programs.map(pog => (
+                                <option key={pog._id} value={pog._id}>
+                                    {pog.title}
+                                </option>
+                                ))}
+                            </select>
+                            </Col>
+                        </Row>
+
+                            <Row className="mb-3">
+                                <label htmlFor="title" className="col-sm-12 col-form-label form-label">Program Name</label>
                                 <div className="col-md-12 col-12">
                                     <input
                                         type="text"
                                         className="form-control"
-                                        placeholder="Enter Course Name"
+                                        placeholder="Enter Program Name"
                                         id="title"
                                         value={formData.title}
                                         onChange={handleInputChange}
@@ -182,7 +224,7 @@ const UpdateCourse = () => {
 
                             <Row className="mb-3">
                                 <Col md={8}>
-                                    <label htmlFor="price" className="col-sm-12 col-form-label form-label">Course Price</label>
+                                    <label htmlFor="price" className="col-sm-12 col-form-label form-label">Program Price</label>
                                     <div className="col-md-12 col-12">
                                         <input
                                             type="number"
@@ -306,7 +348,7 @@ const UpdateCourse = () => {
           <Card className='mb-3'>
             <Card.Body>
               <Row>
-                <label htmlFor="courseOverview" className="col-sm-12 col-form-label form-label">Course Overview</label>
+                <label htmlFor="courseOverview" className="col-sm-12 col-form-label form-label">Program Overview</label>
                 <div className="col-md-12 col-12">
                   <JoditEditor
                     value={formData?.courseOverview}
@@ -321,7 +363,7 @@ const UpdateCourse = () => {
               <Card >
                 <Card.Body>
                   <Row className="mb-3">
-                    <label htmlFor="courseDetail" className="col-sm-12 col-form-label form-label">Course Detail</label>
+                    <label htmlFor="courseDetail" className="col-sm-12 col-form-label form-label">Program Detail</label>
                     <div className="col-md-12 col-12">
                       <JoditEditor
                         value={formData?.courseDetail}

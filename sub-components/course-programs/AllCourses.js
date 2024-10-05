@@ -70,11 +70,11 @@ const AllCourses = () => {
                 <thead className="table-light">
                   <tr>
                     <th>#</th>
-                    <th>Course Name</th>
-                    <th>Category Name</th>
+                    <th>Program Name</th>
+                    <th>Prerequisite Program</th>
                     <th>Price</th>
                     {/* <th>Status</th> */}
-                    <th>Course Information</th>
+                    <th>Program Information</th>
                     <th>Short Description</th>
                     <th>Action</th>
                   </tr>
@@ -98,7 +98,7 @@ const AllCourses = () => {
                               </div>
                             </div>
                           </td>
-                          <td className="align-middle">{course?.courseCategory?.name}</td>
+                          <td className="align-middle">{course?.prerequisiteCourse?.title?course?.prerequisiteCourse?.title:"NA"}</td>
 
                           <td className="align-middle">
                             Price : {course?.price}<br />
@@ -121,7 +121,7 @@ const AllCourses = () => {
                           <td className="align-middle">
 
                             <div className="d-flex">
-                              <Link className="me-2" href={`/course-program/update-course/${course?._id}`}>
+                              <Link className="me-2" href={`/course-program/update-program/${course?._id}`}>
                                 <PencilSquare
                                   className="text-success"
                                   style={{ cursor: 'pointer' }}
