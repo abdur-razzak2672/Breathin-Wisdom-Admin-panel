@@ -7,7 +7,10 @@ const index = () => {
     <Container fluid className="p-6">
       <div className='d-flex justify-content-between border-bottom pb-4 mb-4'>
         <PageHeading heading="Bundle Package List" />
-        <Link href="/course-package/add-package"><Button variant="primary">Add Bundle Package</Button></Link>
+        <div className={'d-flex'}>
+            <Link href="/course-package/add-package"><Button variant="primary">Add Bundle Package</Button></Link>
+            <Link href="/course-package/add-promotion-text"><Button variant="primary" className="ms-2">Add Promotion Description</Button></Link>
+        </div>
       </div>
       <AllPackages />
     </Container>

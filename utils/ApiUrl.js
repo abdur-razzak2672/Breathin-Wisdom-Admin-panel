@@ -27,6 +27,8 @@ const ApiUrl = {
   GET_ALL_PACKAGES: baseUrl2 + 'private/subscriptions',
   CREATE_PACKAGE: baseUrl2 + 'private/subscriptions',
   UPDATE_PACKAGE_STATUS: (id) => `${baseUrl2}private/subscriptions/${id}/status`,
+  SAVE_PROMOTION_TEXT: baseUrl2 + 'private/promotion-text',
+  GET_PROMOTION_TEXT: baseUrl2 + 'public/promotion-text',
 
 
   // auth

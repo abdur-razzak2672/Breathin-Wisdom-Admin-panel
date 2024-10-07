@@ -5,17 +5,13 @@ import ApiUrl from '../../utils/ApiUrl';
 import { toast } from 'react-toastify';
 import Loader from '../Spinner';
 import dynamic from "next/dynamic";
-const JoditEditor = dynamic(() => import('jodit-react'), {
-  ssr: false,
-});
 
 const AddContent = () => {
   const [loading, setLoading] = useState(false);
-  const [showDescription, setShowDescription] = useState(false);
   const [courses, setCourses] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
-    subscribeType: "",  // Changed from courseId to subscribeType
+    subscribeType: "", // Changed from courseId to subscribeType
   });
   const [courseInputs, setCourseInputs] = useState([
     {
@@ -34,21 +30,10 @@ const getCourses = async () => {
       toast.error('Failed to fetch courses');
     }
   };
-const handleEditorChange = (content, field) => {
-    setFormData({ ...formData, [field]: content });
-  };
 
   useEffect(() => {
     getCourses();
   }, []);
-
-  useEffect(() => {
-    if (formData.subscribeType === 'promotion') {
-      setShowDescription(true);
-    } else {
-      setShowDescription(false);
-    }
-  }, [formData.subscribeType]);
 
   const handleFormInputChange = (e) => {
     const { id, value } = e.target;
@@ -105,9 +90,7 @@ const handleEditorChange = (content, field) => {
     const formDataInstance = new FormData();
     formDataInstance.append('packageName', formData.title);
     formDataInstance.append('subscribeType', formData.subscribeType);
-    if (formData.subscribeType === 'promotion') {
-      formDataInstance.append('description', formData.description);
-    }
+    formDataInstance.append('description', formData.description || null );
 
     courseInputs.forEach((course, index) => {
       formDataInstance.append(`courses[${index}][courseID]`, course.courseID || '');
@@ -195,17 +178,19 @@ const handleEditorChange = (content, field) => {
                 </Col>
               </Row>
 
-              {showDescription && (
                   <Row className="mb-3">
-                <Form.Label className="col-md-4" htmlFor="subscribeType">Promotion Description</Form.Label>
+                <Form.Label className="col-md-4" htmlFor="subscribeType">Bundle Tag</Form.Label>
                 <Col md={12} xs={12}>
-                 <JoditEditor
-                    value={formData?.description}
-                    onBlur={newContent => handleEditorChange(newContent, 'description')}
+                 <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Bundle Tag"
+                    id="description"
+                    value={formData.description}
+                    onChange={handleFormInputChange}
                   />
                 </Col>
               </Row>
-              )}
 
               <Row className="align-items-center">
                 <Col md={12} xs={12} className="mt-4">
