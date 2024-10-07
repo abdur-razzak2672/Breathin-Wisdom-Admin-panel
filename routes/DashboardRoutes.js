@@ -49,8 +49,8 @@ export const DashboardMenu = [
 		title: 'Course Programs',
 		icon: 'layers',
 		children: [
-			{ id: uuid(), link: '/course-program/all-courses', name: 'All Courses' },
-			{ id: uuid(), link: '/course-program/add-course', name: 'Add Course'},
+			{ id: uuid(), link: '/course-program/all-programs', name: 'All Program' },
+			{ id: uuid(), link: '/course-program/add-program', name: 'Add Program'},
 		]
 	},
 	{

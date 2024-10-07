@@ -141,8 +141,8 @@ const handleError = (error, router) => {
       toast.error(data.message || 'Server error. Please try again later.');
       throw new Error('Server error. Please try again later.');
     default:
-      console.error('Error:', data.message || 'An unexpected error occurred.');
       toast.error(data.message || 'An unexpected error occurred.');
+      console.error('Error:', data.message || 'An unexpected error occurred.');
       throw new Error(data.message || 'An unexpected error occurred.');
   }
 };
