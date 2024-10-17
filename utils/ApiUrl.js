@@ -12,7 +12,6 @@ const ApiUrl = {
   UPDATE_CATEGORY: baseUrl + 'course_category',
   GET_CATEGORY: baseUrl + 'course_category',
 
-
   // courses
   GET_ALL_COURSES: baseUrl + 'all-courses',
   CREATE_COURSE: baseUrl + 'course',
