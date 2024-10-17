@@ -39,6 +39,7 @@ const UpdateCourse = () => {
             const response = await ApiService.getApiService(`${ApiUrl.DETAIL_COURSE}/${courseId}`);
             const course = response.result;
             setFormData({
+                
                 title: course.title,
                 shortDescription: course.shortDescription,
                 price: course.price,
