@@ -1,6 +1,10 @@
-const baseUrl = "http://localhost:3012/api/v1/program/admin/"
-const baseUrl_auth = "http://localhost:3012/api/v1/auth"
-const baseUrl2 = "http://localhost:3012/api/v1/payment/"
+// const baseUrl = "http://localhost:3012/api/v1/program/admin/"
+// const baseUrl_auth = "http://localhost:3012/api/v1/auth"
+// const baseUrl2 = "http://localhost:3012/api/v1/payment/"
+const baseUrl = "https://api.breatheinwisdom.com/api/v1/program/admin/"
+const baseUrl_auth = "https://api.breatheinwisdom.com/api/v1/auth"
+const baseUrl2 = "https://api.breatheinwisdom.com/api/v1/payment/"
+
 const ApiUrl = {
   CREATE_CATEGORY: baseUrl + 'course_category',
   GET_CATEGORY_LIST: baseUrl + 'course_category',
